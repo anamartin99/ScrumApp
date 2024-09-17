@@ -1,6 +1,7 @@
 package com.example.ScrumApp2.controllerTests;
 
 import com.example.ScrumApp2.controller.UserController;
+import com.example.ScrumApp2.model.ERole;
 import com.example.ScrumApp2.model.User;
 import com.example.ScrumApp2.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -52,7 +54,7 @@ public class UserControllerTests {
 
         when(userService.getAllUsers()).thenReturn(Arrays.asList(user1, user2));
 
-        mockMvc.perform(get("/user"))
+        mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].username").value("user1"))
@@ -70,7 +72,7 @@ public class UserControllerTests {
 
         when(userService.getUserById(1L)).thenReturn(user);
 
-        mockMvc.perform(get("/user/1"))
+        mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.username").value("user1"));
@@ -79,17 +81,32 @@ public class UserControllerTests {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void testCreateUser() throws Exception {
-        User user = new User();
-        user.setUsername("newUser");
+        User newUser = new User();
+        newUser.setUsername("newUser");
+        newUser.setPassword("password123");
+        newUser.setEmail("newuser@example.com");
+        newUser.setRole(ERole.USER);
 
-        when(userService.createUser(any(User.class))).thenReturn(user);
+        User createdUser = new User();
+        createdUser.setId(1L);
+        createdUser.setUsername("newUser");
+        createdUser.setPassword("password123");
+        createdUser.setEmail("newuser@example.com");
+        createdUser.setRole(ERole.USER);
 
-        mockMvc.perform(post("/user")
+        when(userService.createUser(any(User.class))).thenReturn(createdUser);
+
+        mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
+                        .content(objectMapper.writeValueAsString(newUser)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("newUser"));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("newUser"))
+                .andExpect(jsonPath("$.email").value("newuser@example.com"))
+                .andExpect(jsonPath("$.role").value("ROLE_USER"));
+
 
         verify(userService, times(1)).createUser(any(User.class));
     }
@@ -99,7 +116,7 @@ public class UserControllerTests {
         User updatedUser = new User();
         updatedUser.setUsername("updatedUser");
 
-        mockMvc.perform(put("/user/1")
+        mockMvc.perform(put("/api/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedUser)))
                 .andExpect(status().isOk());
@@ -109,7 +126,7 @@ public class UserControllerTests {
 
     @Test
     public void testDeleteUser() throws Exception {
-        mockMvc.perform(delete("/user/1"))
+        mockMvc.perform(delete("/api/users/1"))
                 .andExpect(status().isOk());
 
         verify(userService, times(1)).deleteUser(1L);

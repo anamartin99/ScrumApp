@@ -32,8 +32,9 @@ public class ProjectService {
         iProjectRepository.save(project);
     }
 
-    public void deleteProject(long id) {
+    public String deleteProject(long id) {
         iProjectRepository.deleteById(id);
+        return "Project deleted";
     }
 
 }

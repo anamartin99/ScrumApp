@@ -15,6 +15,7 @@ public class UserService {
     public UserService(IUserRepository iUserRepository) {
         this.iUserRepository = iUserRepository;
     }
+
     public List<User> getAllUsers() {
         return iUserRepository.findAll();
     }
@@ -46,10 +47,6 @@ public class UserService {
 
     public String deleteUser(Long id) {
         iUserRepository.deleteById(id);
-        return null;
-    }
-
-    public ArrayList<User> getUser() {
-        throw new UnsupportedOperationException("Unimplemented method 'getUser'");
+        return "User deleted successfully";
     }
 }

@@ -2,6 +2,7 @@ package com.example.ScrumApp2.controllerTests;
 
 import com.example.ScrumApp2.controller.ProjectController;
 import com.example.ScrumApp2.model.Project;
+import com.example.ScrumApp2.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,19 +11,22 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class ProjectControllerTests {
+
     @Mock
-    private ProjectController projectController;
+    private ProjectService projectService;
 
     @InjectMocks
-    private ProjectController projectControllerMock;
+    private ProjectController projectController;
 
     private Project project1;
     private Project project2;
@@ -41,49 +45,49 @@ public class ProjectControllerTests {
 
     @Test
     void testGetAllProject() {
-        ArrayList<Project> projectList = new ArrayList<>(Arrays.asList(project1, project2));
+        List<Project> projectList = new ArrayList<>(Arrays.asList(project1, project2));
 
-        when(projectController.getAllProjects()).thenReturn(projectList);
+        when(projectService.getAllProjects()).thenReturn(projectList);
 
-        ArrayList<Project> result = projectControllerMock.getAllProject();
+        List<Project> result = projectController.getAllProjects();
         assertEquals(2, result.size());
-        verify(projectController, times(1)).getAllProject();
+        verify(projectService, times(1)).getAllProjects();
     }
 
     @Test
     void testGetProjectById() {
-        when(projectController.getProjectbyId(1L)).thenReturn(project1);
+        when(projectService.getProjectbyId(1L)).thenReturn(Optional.of(project1));
 
-        Optional<Project> result = projectControllerMock.getProjectbyId(1L);
-        assertEquals(project1.getId(), result.getId());
-        assertEquals(project1.getName(), result.getName());
-        verify(projectController, times(1)).getProjectById(1L);
+        Optional<Project> result = projectController.getProjectbyId(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(project1.getId(), result.get().getId());
+        assertEquals(project1.getName(), result.get().getName());
+        verify(projectService, times(1)).getProjectbyId(1L);
     }
 
     @Test
     void testCreateProject() {
-        when(projectController.createProject(any(Project.class))).thenReturn(project1);
+        when(projectService.createProject(any(Project.class))).thenReturn(project1);
 
-        Project result = projectControllerMock.createProject(project1);
+        Project result = projectController.createProject(project1);
         assertEquals("Project 1", result.getName());
-        verify(projectController, times(1)).createProject(any(Project.class));
+        verify(projectService, times(1)).createProject(any(Project.class));
     }
 
     @Test
     void testUpdateProject() {
-        doNothing().when(projectController).updateProject(any(Project.class), eq(1L));
+        doNothing().when(projectService).updateProject(any(Project.class), eq(1L));
 
-        projectControllerMock.updateProject(project1, 1L);
+        projectController.updateProject(project1, 1L);
 
-        verify(projectController, times(1)).updateProject(any(Project.class), eq(1L));
+        verify(projectService,times(1)).updateProject(any(Project.class), eq(1L));
     }
 
     @Test
     void testDeleteProject() {
-        when(projectController.deleteProject(1L)).thenReturn("Project deleted");
 
-        String result = projectControllerMock.deleteProject(1L);
-        assertEquals("Project deleted", result);
-        verify(projectController, times(1)).deleteProject(1L);
+      projectController.deleteProject(1L);
+        verify(projectService, times(1)).deleteProject(1L);
     }
 }

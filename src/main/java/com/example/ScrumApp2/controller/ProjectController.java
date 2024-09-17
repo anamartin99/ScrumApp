@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/projects")
 @CrossOrigin(origins = "*")
 public class ProjectController {
 
@@ -19,27 +19,27 @@ public class ProjectController {
     }
 
 
-    @GetMapping(path = "/project")
+    @GetMapping
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
     }
 
-    @GetMapping(path = "/project/{id}")
+    @GetMapping(path = "/{id}")
     public Optional<Project> getProjectbyId(@PathVariable("id") Long id) {
         return projectService.getProjectbyId(id);
     }
 
-    @PostMapping(path = "/project")
+    @PostMapping
     public Project createProject(@RequestBody Project newProject) {
         return projectService.createProject(newProject);
     }
 
-    @PutMapping(path = "/project/{id}")
+    @PutMapping(path = "/{id}")
     public void updateProject(@RequestBody Project project, @PathVariable Long id) {
         projectService.updateProject(project,id);
     }
 
-    @DeleteMapping(path = "/project/{id}")
+    @DeleteMapping(path = "/{id}")
     public void deleteProject(@PathVariable("id") Long id) {
       projectService.deleteProject(id);
     }

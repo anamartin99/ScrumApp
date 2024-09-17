@@ -3,12 +3,15 @@ package com.example.ScrumApp2.config;
 import com.example.ScrumApp2.jwt.AuthTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.example.ScrumApp2.model.ERole.ADMIN;
 
 @EnableWebSecurity
 @Configuration
@@ -32,14 +35,22 @@ public class WebConfigSecurity {
                                 .requestMatchers("/api/test/all").permitAll()
                                 .requestMatchers("/api/test/user").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers("/api/test/admin").hasAuthority("ADMIN")
-                                .requestMatchers("/api/perseo/courses/post").hasAuthority("ADMIN")
-                                .requestMatchers("/api/perseo/courses/put/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/perseo/courses/delete/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/perseo/courses/get").permitAll()
-                                .requestMatchers("/api/perseo/workexperiences/get").hasAuthority("USER")
-                                .requestMatchers("/api/perseo/workexperiences/put/**").hasAuthority("USER")
-                                .requestMatchers("/api/perseo/workexperiences/delete/**").hasAuthority("USER")
-                                .requestMatchers("/api/perseo/workexperiences/post").hasAuthority("USER")
+                                .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/auth/register").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/users").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/users/{id}").hasAnyAuthority("ADMIN","USER")
+                                .requestMatchers(HttpMethod.POST,"/api/users").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/api/{id}").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE,"/api/users/{id}").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/projects").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/projects").hasAnyAuthority("GESTOR","ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/api/projects/{id}").hasAnyAuthority("GESTOR","ADMIN")
+                                .requestMatchers(HttpMethod.DELETE,"/api/projects/{id}").hasAnyAuthority("GESTOR","ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/tasks").hasAnyAuthority("GESTOR","ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/tasks/{id}").hasAnyAuthority("USER")
+                                .requestMatchers(HttpMethod.POST,"/api/tasks").hasAuthority("GESTOR")
+                                .requestMatchers(HttpMethod.PUT,"/api/tasks/{id}").hasAnyAuthority("USER")
+                                .requestMatchers(HttpMethod.DELETE,"/api/tasks/{id}").hasAuthority("GESTOR")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->

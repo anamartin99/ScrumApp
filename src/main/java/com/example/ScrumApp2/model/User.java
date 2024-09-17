@@ -28,6 +28,9 @@ public class User implements UserDetails {
         @Enumerated(EnumType.STRING)
         ERole role;
 
+        public User() {
+        }
+
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
                 return List.of(new SimpleGrantedAuthority((role.name())));
@@ -60,7 +63,7 @@ public class User implements UserDetails {
         @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
         private Set<Project> projects;
 
-        private User(Builder builder) {
+        public User(Builder builder) {
                 this.id = builder.id;
                 this.username = builder.username;
                 this.password = builder.password;

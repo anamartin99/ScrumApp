@@ -31,6 +31,9 @@ public class Project {
         this.user = user;
     }
 
+    public Project() {
+    }
+
     public Long getId() {
         return id;
     }

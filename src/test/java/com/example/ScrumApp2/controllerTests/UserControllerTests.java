@@ -89,19 +89,17 @@ public class UserControllerTests {
 
     @Test
     void testUpdateUser() {
-        // Eliminar el doNothing() si updateUser() no es void
+
         userController.updateUser(user1, 1L);
 
-        // Verificar la llamada al método updateUser()
         verify(userService, times(1)).updateUser(eq(1L), any(User.class));
     }
 
     @Test
     void testDeleteUser() {
-        // Eliminar el doNothing() si deleteUser() no es void
+
         userController.deleteUser(1L);
 
-        // Verificar la llamada al método deleteUser()
         verify(userService, times(1)).deleteUser(1L);
     }
 }

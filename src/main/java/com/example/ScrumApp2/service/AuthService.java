@@ -1,5 +1,6 @@
 package com.example.ScrumApp2.service;
 
+import com.example.ScrumApp2.model.ERole;
 import com.example.ScrumApp2.model.User;
 import com.example.ScrumApp2.dto.request.LoginRequest;
 import com.example.ScrumApp2.dto.request.RegisterRequest;
@@ -32,7 +33,7 @@ public class AuthService {
 
         String token = jwtService.getTokenService(users);
 
-        return new AuthResponse.Builder().token(token).build();
+        return new AuthResponse.Builder().token(token).role(((User)users).getRole()).build();
     }
 
     public AuthResponse register(RegisterRequest register) {

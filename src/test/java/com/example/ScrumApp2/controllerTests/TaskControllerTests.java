@@ -38,6 +38,7 @@ public class TaskControllerTests {
     @Test
     public void testCreateTask() throws Exception {
         Task task = new Task();
+        task.setName("Task 1");
         when(taskService.createTask(any(Task.class))).thenReturn(task);
 
         mockMvc.perform(post("/api/tasks")

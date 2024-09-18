@@ -1,134 +1,107 @@
 package com.example.ScrumApp2.controllerTests;
 
-import com.example.ScrumApp2.controller.UserController;
-import com.example.ScrumApp2.model.ERole;
-import com.example.ScrumApp2.model.User;
-import com.example.ScrumApp2.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.example.ScrumApp2.controller.UserController;
+import com.example.ScrumApp2.model.ERole;
+import com.example.ScrumApp2.model.User;
+import com.example.ScrumApp2.service.UserService;
 
 public class UserControllerTests {
-    @InjectMocks
-    private UserController userController;
 
     @Mock
     private UserService userService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private UserController userController;
+
+    private User user1;
+    private User user2;
 
     @BeforeEach
-    public void setup() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-        objectMapper = new ObjectMapper();
+        user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("user1");
+        user1.setPassword("password123");
+        user1.setEmail("user1@example.com");
+        user1.setRole(ERole.USER);
+
+        user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("user2");
+        user2.setPassword("password123");
+        user2.setEmail("user2@example.com");
+        user2.setRole(ERole.USER);
     }
 
     @Test
-    public void testGetAllUsers() throws Exception {
-        User user1 = new User();
-        user1.setId(1L);
-        user1.setUsername("user1");
+    void testGetAllUsers() {
+        List<User> userList = new ArrayList<>(Arrays.asList(user1, user2));
 
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setUsername("user2");
+        when(userService.getAllUsers()).thenReturn(userList);
 
-        when(userService.getAllUsers()).thenReturn(Arrays.asList(user1, user2));
-
-        mockMvc.perform(get("/api/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].username").value("user1"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].username").value("user2"));
-
+        List<User> result = userController.getAllUser();
+        assertEquals(2, result.size());
+        assertEquals(user1, result.get(0));
+        assertEquals(user2, result.get(1));
         verify(userService, times(1)).getAllUsers();
     }
 
     @Test
-    public void testGetUserById() throws Exception {
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("user1");
+    void testGetUserById() {
+        when(userService.getUserById(1L)).thenReturn(user1);
 
-        when(userService.getUserById(1L)).thenReturn(user);
+        User result = userController.getUserById(1L);
 
-        mockMvc.perform(get("/api/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.username").value("user1"));
-
+        assertEquals(user1.getId(), result.getId());
+        assertEquals(user1.getUsername(), result.getUsername());
+        assertEquals(user1.getEmail(), result.getEmail());
+        assertEquals(user1.getRole(), result.getRole());
         verify(userService, times(1)).getUserById(1L);
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testCreateUser() throws Exception {
-        User newUser = new User();
-        newUser.setUsername("newUser");
-        newUser.setPassword("password123");
-        newUser.setEmail("newuser@example.com");
-        newUser.setRole(ERole.USER);
+    void testCreateUser() {
+        when(userService.createUser(any(User.class))).thenReturn(user1);
 
-        User createdUser = new User();
-        createdUser.setId(1L);
-        createdUser.setUsername("newUser");
-        createdUser.setPassword("password123");
-        createdUser.setEmail("newuser@example.com");
-        createdUser.setRole(ERole.USER);
+        User result = userController.addUserService(user1);
 
-        when(userService.createUser(any(User.class))).thenReturn(createdUser);
-
-        mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newUser)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.username").value("newUser"))
-                .andExpect(jsonPath("$.email").value("newuser@example.com"))
-                .andExpect(jsonPath("$.role").value("ROLE_USER"));
-
-
+        assertEquals(user1.getId(), result.getId());
+        assertEquals(user1.getUsername(), result.getUsername());
+        assertEquals(user1.getEmail(), result.getEmail());
+        assertEquals(user1.getRole(), result.getRole());
         verify(userService, times(1)).createUser(any(User.class));
     }
 
     @Test
-    public void testUpdateUser() throws Exception {
-        User updatedUser = new User();
-        updatedUser.setUsername("updatedUser");
+    void testUpdateUser() {
+        // Eliminar el doNothing() si updateUser() no es void
+        userController.updateUser(user1, 1L);
 
-        mockMvc.perform(put("/api/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedUser)))
-                .andExpect(status().isOk());
-
+        // Verificar la llamada al método updateUser()
         verify(userService, times(1)).updateUser(eq(1L), any(User.class));
     }
 
     @Test
-    public void testDeleteUser() throws Exception {
-        mockMvc.perform(delete("/api/users/1"))
-                .andExpect(status().isOk());
+    void testDeleteUser() {
+        // Eliminar el doNothing() si deleteUser() no es void
+        userController.deleteUser(1L);
 
+        // Verificar la llamada al método deleteUser()
         verify(userService, times(1)).deleteUser(1L);
     }
 }

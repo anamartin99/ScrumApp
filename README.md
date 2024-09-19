@@ -1,167 +1,168 @@
- ScrumApp Management System
+ScrumApp Management System
 
- Contexto del Proyecto
+ Project Context
 
-Una agencia de desarrollo de software que gestiona múltiples proyectos de desarrollo web y aplicaciones móviles ha experimentado un crecimiento significativo en los últimos meses. Debido a la expansión de su equipo y la creciente cantidad de proyectos y tareas en curso, han identificado la necesidad de implementar un sistema de gestión de tareas que permita:
-- Controlar el avance de las tareas de cada proyecto.
-- Asignar responsabilidades claras entre desarrolladores, diseñadores, y testers.
-- Supervisar el progreso de los proyectos por parte de los gestores y administradores.
-- Asegurar la seguridad y control de accesos, para que cada empleado pueda ver y gestionar solo la información relevante a su trabajo.
+A software development agency managing multiple web and mobile application projects has experienced significant growth in recent months. Due to the expansion of its team and the increasing number of ongoing projects and tasks, they have identified the need to implement a task management system that allows:
 
- Marcos de Competencias
+- Tracking the progress of tasks for each project.
+- Assigning clear responsibilities among developers, designers, and testers.
+- Supervising the progress of projects by managers and administrators.
+- Ensuring security and access control, so each employee can view and manage only the information relevant to their work.
 
-- Gestión de proyecto con metodologías ágiles.
-- Desarrollar el backend de una aplicación web (niv. 3).
-- Administrar bases de datos (niv. 2).
-- Desarrollar y Ejecutar pruebas automatizadas (niv. 3).
+ Competency Framework
 
- Descripción del Proyecto
+- Project management with agile methodologies.
+- Backend development of a web application (level 3).
+- Database management (level 2).
+- Developing and executing automated tests (level 3).
 
-El proyecto es un sistema de gestión de tareas basado en una API REST, desarrollado con Java 17 y Spring Boot. La aplicación permite la autenticación de usuarios a través de JWT (JSON Web Tokens) y roles con distintos niveles de acceso utilizando Spring Security. Utiliza una base de datos MySQL para almacenar la información y emplea Docker para contenedores, integrando GitHub Actions para el CI/CD.
+ Project Description
 
- Objetivos del Proyecto
+The project is a task management system based on a REST API, developed with Java 17 and Spring Boot. The application allows user authentication through JWT (JSON Web Tokens) and roles with different access levels using Spring Security. It uses a MySQL database to store information and employs Docker for containerization, integrating GitHub Actions for CI/CD.
 
-1. Reforzar los conceptos de creación de APIs.
-2. Aplicar relaciones de BBDD.
-3. Desarrollar un login con Spring Security y JWT.
-4. Tener primeros contactos con GitHub Actions.
+ Project Objectives
 
- Requerimientos Funcionales
+1. Reinforce the concepts of API creation.
+2. Apply database relationships.
+3. Develop login functionality with Spring Security and JWT.
+4. Gain initial experience with GitHub Actions.
 
- Roles de Usuario
+ Functional Requirements
 
-- Administrador: Puede gestionar usuarios y tareas.
-- Gestor: Puede crear, asignar y gestionar tareas, pero no gestionar usuarios.
-- Usuario: Solo puede visualizar y actualizar el estado de sus tareas asignadas.
+ User Roles
 
- Autenticación y Autorización
+- Administrator: Can manage users and tasks.
+- Manager: Can create, assign, and manage tasks, but cannot manage users.
+- User: Can only view and update the status of their assigned tasks.
 
-- Implementación de autenticación con JWT para permitir un inicio de sesión seguro.
-- Autorización basada en roles con Spring Security, que otorga diferentes permisos según el rol asignado al usuario.
+ Authentication and Authorization
 
- CRUD para Tareas
+- Implement authentication with JWT for secure login.
+- Role-based authorization with Spring Security, granting different permissions based on the user's assigned role.
 
-- Crear: Los gestores pueden crear nuevas tareas y asignarlas a un usuario.
-- Leer: Los usuarios pueden visualizar sus tareas, mientras que los gestores pueden ver las tareas asignadas a cualquier usuario.
-- Actualizar: Los usuarios pueden actualizar el estado de sus tareas.
-- Eliminar: Solo los gestores pueden eliminar tareas.
+ Task CRUD
 
- Gestión de Usuarios
+- Create: Managers can create new tasks and assign them to a user.
+- Read: Users can view their tasks, while managers can view tasks assigned to any user.
+- Update: Users can update the status of their tasks.
+- Delete: Only managers can delete tasks.
 
-- El administrador puede gestionar el alta, baja y actualización de los usuarios del sistema, así como asignar roles.
-- Filtro por Usuario: El gestor puede ver la lista de tareas por usuario y el estado de las mismas.
+ User Management
 
- Relaciones entre Entidades (Base de Datos)
+- Administrators can manage the creation, deletion, and updating of system users, as well as assign roles.
+- Filter by User: Managers can view the list of tasks by user and their status.
 
-- Usuario: Tabla que contiene información de los usuarios y su relación con las tareas.
-- Tarea: Tabla que almacena las tareas asignadas a los usuarios.
-- Proyecto: Relación con la entidad Usuario (Un usuario puede pertenecer a varios proyectos, y un proyecto puede tener varios usuarios). Relación con Tarea (Un proyecto puede tener varias tareas).
+ Entity Relationships (Database)
 
- Diagrama de Entidades (ER)
+- User: Table containing user information and their relationship with tasks.
+- Task: Table storing tasks assigned to users.
+- Project: Relationship with the User entity (A user can belong to multiple projects, and a project can have multiple users). Relationship with Task (A project can have multiple tasks).
 
-- Usuario:
+ Entity-Relationship Diagram (ER)
+
+- User:
   - id (PK)
   - username
   - password
   - email
-  - role (ADMIN, GESTOR, USUARIO)
+  - role (ADMIN, MANAGER, USER)
 
-- Proyecto:
+- Project:
   - id (PK)
-  - nombre
+  - name
 
-- Tarea:
+- Task:
   - id (PK)
-  - nombre
-  - descripcion
-  - estado (PENDIENTE, EN_PROGRESO, COMPLETADO)
-  - usuario_id (FK) (Relación con Usuario)
-  - proyecto_id (FK) (Relación con Proyecto)
+  - name
+  - description
+  - status (PENDING, IN_PROGRESS, COMPLETED)
+  - user_id (FK) (Relationship with User)
+  - project_id (FK) (Relationship with Project)
 
- Endpoints de la API
+  API Endpoints
 
- Autenticación
+  Authentication
 
-- Iniciar Sesión:
-  - `POST /api/auth/login`: Autenticación de usuario (Devuelve JWT)
+- Login:
+  - `POST /api/auth/login`: User authentication (Returns JWT)
   
-- Registro de Usuario:
-  - `POST /api/auth/register`: Registro de un nuevo usuario (Solo accesible por ADMIN)
+- User Registration:
+  - `POST /api/auth/register`: Register a new user (Accessible only by ADMIN)
 
-  Usuarios
+  Users
 
-- Listar Todos los Usuarios:
-  - `GET /api/users`: Solo ADMIN
+- List All Users:
+  - `GET /api/users`: Only ADMIN
   
-- Obtener un Usuario por ID:
-  - `GET /api/users/{id}`: ADMIN o usuario mismo
+- Get User by ID:
+  - `GET /api/users/{id}`: ADMIN or the user themselves
   
-- Crear un Nuevo Usuario:
-  - `POST /api/users`: Solo ADMIN
+- Create New User:
+  - `POST /api/users`: Only ADMIN
   
-- Actualizar un Usuario:
-  - `PUT /api/users/{id}`: Solo ADMIN
+- Update User:
+  - `PUT /api/users/{id}`: Only ADMIN
   
-- Eliminar un Usuario:
-  - `DELETE /api/users/{id}`: Solo ADMIN
+- Delete User:
+  - `DELETE /api/users/{id}`: Only ADMIN
 
-  Proyectos
+  Projects
 
-- Listar Todos los Proyectos:
+- List All Projects:
   - `GET /api/projects`
   
-- Crear un Nuevo Proyecto:
-  - `POST /api/projects`: Solo GESTOR y ADMIN
+- Create New Project:
+  - `POST /api/projects`: Only MANAGER and ADMIN
   
-- Actualizar un Proyecto:
-  - `PUT /api/projects/{id}`: Solo GESTOR y ADMIN
+- Update Project:
+  - `PUT /api/projects/{id}`: Only MANAGER and ADMIN
   
-- Eliminar un Proyecto:
-  - `DELETE /api/projects/{id}`: Solo GESTOR y ADMIN
+- Delete Project:
+  - `DELETE /api/projects/{id}`: Only MANAGER and ADMIN
 
-  Tareas
+  Tasks
 
-- Listar Todas las Tareas:
-  - `GET /api/tasks`: Solo GESTOR y ADMIN
+- List All Tasks:
+  - `GET /api/tasks`: Only MANAGER and ADMIN
   
-- Obtener una Tarea Específica:
-  - `GET /api/tasks/{id}`: Usuarios pueden obtener solo las suyas
+- Get Specific Task:
+  - `GET /api/tasks/{id}`: Users can only get their own tasks
   
-- Crear una Nueva Tarea:
-  - `POST /api/tasks`: Solo GESTOR
+- Create New Task:
+  - `POST /api/tasks`: Only MANAGER
   
-- Actualizar una Tarea:
-  - `PUT /api/tasks/{id}`: Usuarios solo sus propias tareas
+- Update Task:
+  - `PUT /api/tasks/{id}`: Users can only update their own tasks
   
-- Eliminar una Tarea:
-  - `DELETE /api/tasks/{id}`: Solo GESTOR
+- Delete Task:
+  - `DELETE /api/tasks/{id}`: Only MANAGER
 
-  Tecnologías Utilizadas
+ Technologies Used
 
-- Java 17: Lenguaje de programación utilizado para el desarrollo backend.
-- Spring Boot: Framework para construir aplicaciones Java.
-- Spring Security y JWT: Para autenticación y autorización.
-- MySQL: Base de datos utilizada para el almacenamiento de datos.
-- Docker: Para contenerización y despliegue.
-- GitHub Actions: Para CI/CD y automatización de despliegues.
-- JUnit y Mockito: Para pruebas automatizadas.
+- Java 17: Programming language used for backend development.
+- Spring Boot: Framework for building Java applications.
+- Spring Security and JWT: For authentication and authorization.
+- MySQL: Database used for data storage.
+- Docker: For containerization and deployment.
+- GitHub Actions: For CI/CD and deployment automation.
+- JUnit and Mockito: For automated testing.
 
-  Requisitos Técnicos del Proyecto
+  Technical Requirements
 
-1. Conocimientos de programación en Java.
-2. Conocimientos en Programación Orientada a Objetos (POO).
+1. Knowledge of Java programming.
+2. Knowledge of Object-Oriented Programming (OOP).
 3. Spring Boot.
-4. Spring Security y JWT.
+4. Spring Security and JWT.
 5. Testing.
 6. Docker.
 7. GitHub Actions.
-8. No se puede usar Lombok ni la annotation `@Autowired`.
+8. Lombok and `@Autowired` annotation cannot be used.
 
- Cómo Ejecutar el Proyecto
+  How to Run the Project
 
-  Configuración
+  Configuration
 
- Clona el Repositorio:
+1. Clone the Repository:
 
    ```bash
    git clone https://github.com/anamartin99/ScrumApp-1.git

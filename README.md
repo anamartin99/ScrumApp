@@ -29,10 +29,10 @@ The project is a task management system based on a REST API, developed with Java
 
  Team
 
-- Ana María - [GitHub Profile](https://github.com/anamartin99)
-- Abraham Martín - [GitHub Profile](https://github.com/abmmm19888)
-- Eva Martínez - [GitHub Profile](https://github.com/EvaMartinez94)
-- Norbert "Corvus" Harrow - [GitHub Profile](https://github.com/NCorvusH)
+- Ana María - (Developer) [GitHub Profile](https://github.com/anamartin99)
+- Abraham Martín - (Developer) [GitHub Profile](https://github.com/abmmm19888)
+- Eva Martínez - (Product Owner)  [GitHub Profile](https://github.com/EvaMartinez94)
+- Norbert "Corvus" Harrow (Scrum Master) - [GitHub Profile](https://github.com/NCorvusH)
 
 
 

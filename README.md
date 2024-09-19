@@ -27,6 +27,15 @@ The project is a task management system based on a REST API, developed with Java
 3. Develop login functionality with Spring Security and JWT.
 4. Gain initial experience with GitHub Actions.
 
+ Team
+
+- Ana María - [GitHub Profile](https://github.com/anamartin99)
+- Abraham Martín - [GitHub Profile](https://github.com/abmmm19888)
+- Eva Martínez - [GitHub Profile](https://github.com/EvaMartinez94)
+- Norbert "Corvus" Harrow - [GitHub Profile](https://github.com/NCorvusH)
+
+
+
  Functional Requirements
 
  User Roles
@@ -166,3 +175,8 @@ The project is a task management system based on a REST API, developed with Java
 
    ```bash
    git clone https://github.com/anamartin99/ScrumApp-1.git
+
+
+
+
+

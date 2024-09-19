@@ -20,15 +20,14 @@ public class RegisterRequest {
         this.password = builder.password;
         this.role = builder.role;
     }
+
     public String getUsername() {
         return username;
     }
 
-
     public String getEmail() {
         return email;
     }
-
 
     public String getPassword() {
         return password;
@@ -37,6 +36,7 @@ public class RegisterRequest {
     public ERole getRole() {
         return role;
     }
+
     public static class Builder {
         private String username;
         private String email;

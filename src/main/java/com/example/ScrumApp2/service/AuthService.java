@@ -1,6 +1,5 @@
 package com.example.ScrumApp2.service;
 
-import com.example.ScrumApp2.model.ERole;
 import com.example.ScrumApp2.model.User;
 import com.example.ScrumApp2.dto.request.LoginRequest;
 import com.example.ScrumApp2.dto.request.RegisterRequest;

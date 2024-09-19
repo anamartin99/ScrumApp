@@ -4,7 +4,6 @@ import com.example.ScrumApp2.model.User;
 import com.example.ScrumApp2.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

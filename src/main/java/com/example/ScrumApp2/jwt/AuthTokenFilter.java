@@ -54,7 +54,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // Public method to facilitate testing
     public void filter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         doFilterInternal(request, response, filterChain);

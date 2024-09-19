@@ -53,7 +53,7 @@ public class AuthTokenFilterTests {
         when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
         when(jwtService.isTokenValid(token, userDetails)).thenReturn(true);
 
-        authTokenFilter.filter(request, response, filterChain); // Use the public method
+        authTokenFilter.filter(request, response, filterChain);
 
         verify(filterChain, times(1)).doFilter(request, response);
     }
@@ -66,7 +66,7 @@ public class AuthTokenFilterTests {
         when(jwtService.getUsernameFromToken(token)).thenReturn("username");
         when(userDetailsService.loadUserByUsername(any())).thenThrow(new UsernameNotFoundException("User not found"));
 
-        authTokenFilter.filter(request, response, filterChain); // Use the public method
+        authTokenFilter.filter(request, response, filterChain);
 
         verify(filterChain, times(1)).doFilter(request, response);
     }
@@ -75,7 +75,7 @@ public class AuthTokenFilterTests {
     public void testFilter_NoToken() throws Exception {
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        authTokenFilter.filter(request, response, filterChain); // Use the public method
+        authTokenFilter.filter(request, response, filterChain);
 
         verify(filterChain, times(1)).doFilter(request, response);
     }

@@ -4,7 +4,6 @@ import com.example.ScrumApp2.model.ERole;
 
 import java.util.Objects;
 
-
 public class AuthResponse {
     String token;
     ERole role;
